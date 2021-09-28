@@ -1,7 +1,7 @@
 rtObjectRecognition
 ===================
 
-Real Time Object Recognition using SURF algorithm in OpenCV EEL6562 Course Project
+Real Time Object Recognition using SURF algorithm in OpenCV EEL6562 Course Project.
 
 Note: OpenCV libraries must be installed to use code. See link below on how to install OpenCV
 
