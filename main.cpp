@@ -24,12 +24,14 @@ using namespace std;
 
 int main()
 {
-	//turn performance analysis functions on if testing = true
-	bool testing=false;
+	//Turn on performance analysis functions for generating metrics if generateMetricsForReport = true
+	bool generateMetricsForReport=false;
 	double t; //timing variable
+	string resourceFilePath = "C:/School/Image Processing/";
+	string trainingImageFilePath = resourceFilePath + "book.jpg";
 
 	//load training image
-	Mat object = imread ("C:/School/Image Processing/book.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat object = imread (trainingImageFilePath, CV_LOAD_IMAGE_GRAYSCALE);
 	if (!object.data){
 		cout<<"Can't open image";
 		return -1;
@@ -41,17 +43,15 @@ int main()
 	vector<KeyPoint> kpObject, kpImage;
 	Mat desObject, desImage;
 
-
 	//Performance measures calculations for report
-	if (testing)
+	if (generateMetricsForReport)
 	{
+		//Calculate integral image
 		cout<<object.rows<<" "<<object.cols<<endl;
-
-		//calculate integral image
 		Mat iObject;
 		integral(object, iObject);
 		imshow("Good Matches", iObject);
-		imwrite("C:/School/Image Processing/IntegralImage.jpg", iObject);
+		imwrite(resourceFilePath + "IntegralImage.jpg", iObject);
 		cvWaitKey(0);
 
 		//calculate number of interest points, computation time as f(minHess)
@@ -60,7 +60,7 @@ int main()
 									8000, 8500, 9000, 9500, 10000};
 		int minH;
 		std::ofstream file;
-		file.open("C:/School/Image Processing/TimingC.csv", std::ofstream::out);
+		file.open(resourceFilePath + "TimingC.csv", std::ofstream::out);
 		for (int i=0; i<20; i++)
 		{
 			minH=minHessVector[i];
@@ -108,10 +108,9 @@ int main()
 
 	}
 	imshow("Good Matches",interestPointObject);
-	imwrite("C:/School/Image Processing/bookIP2.jpg", interestPointObject);
+	imwrite(resourceFilePath + "bookIP2.jpg", interestPointObject);
 	cvWaitKey(0);
 	}
-
 
 	//SURF Detector, and descriptor parameters, match object initialization
 	minHess=2000;
@@ -177,16 +176,11 @@ int main()
     	                                }
     	                            }
 
-    	                            //if (good_matches.size()<1)
-    	                            //	good_matches.resize(0,cv::DMatch);
-
     	                            //Draw only "good" matches
     	                            drawMatches( object, kpObject, image, kp_image, good_matches, img_matches, Scalar::all(-1), Scalar::all(-1), vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
 
-
     	                            if (good_matches.size() >= thresholdGoodMatches)
     	                            {
-
     	                            	//Display that the object is found
     	                            	putText(img_matches, "Object Found", cvPoint(10,50),FONT_HERSHEY_COMPLEX_SMALL, 2, cvScalar(0,0,250), 1, CV_AA);
     	                                for(unsigned int i = 0; i < good_matches.size(); i++ )
@@ -197,7 +191,6 @@ int main()
     	                                }
 
     	                                H = findHomography( obj, scene, CV_RANSAC );
-
     	                                perspectiveTransform( obj_corners, scene_corners, H);
 
     	                                //Draw lines between the corners (the mapped object in the scene image )
@@ -214,12 +207,10 @@ int main()
     	                            //Show detected matches
     	                            imshow( "Good Matches", img_matches );
     	                            escapeKey=cvWaitKey(10);
-    	                            //imwrite("C:/School/Image Processing/bookIP3.jpg", img_matches);
+    	                            //imwrite(resourceFilePath + "bookIP3.jpg", img_matches);
 
     	                            if(frameCount>10)
     	                            	escapeKey='q';
-
-
     }
 
     //average frames per second
